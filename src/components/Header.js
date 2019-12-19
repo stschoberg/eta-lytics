@@ -14,35 +14,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 
 
-// const styles = {
-//   root: {
-//     flexGrow: 1,
-//   },
-//   menuButton: {
-//    // marginRight: theme.spacing(2),
-//   },
-//   title: {
-//     flexGrow: 1,
-//   },
-// };
-
-// const [auth, setAuth] = React.useState(true);
-// const [anchorEl, setAnchorEl] = React.useState(null);
-// const open = Boolean(anchorEl);
-
-// const handleChange = event => {
-//   setAuth(event.target.checked);
-// };
-
-// const handleMenu = event => {
-//   setAnchorEl(event.currentTarget);
-// };
-
-// const handleClose = () => {
-//   setAnchorEl(null);
-// };
-
-
 const styles = {
     colors: {
         cardinalRed: "#c41e3a"
