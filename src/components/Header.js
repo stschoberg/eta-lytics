@@ -13,6 +13,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 
+
 // const styles = {
 //   root: {
 //     flexGrow: 1,
@@ -40,7 +41,12 @@ import Menu from '@material-ui/core/Menu';
 // const handleClose = () => {
 //   setAnchorEl(null);
 // };
+
+
 const styles = {
+    colors: {
+        cardinalRed: "#c41e3a"
+    },
     root: {
       flexGrow: 1,
     },
@@ -53,21 +59,20 @@ const styles = {
   };
 
 class Header extends Component {
-
-
-    render() {   return (
-        <div className={styles.root}>
-          <AppBar position="static">
-            <Toolbar>
-              <IconButton edge="start" className={styles.menuButton} color="inherit" aria-label="menu">
-                <MenuIcon />
-              </IconButton>
-              <Typography variant="h6" className={styles.title}>
-                Photos
-              </Typography>
-            </Toolbar>
-          </AppBar>
-        </div>
+    render() {   
+        return (
+            <div className={styles.root}>
+            <AppBar style={{backgroundColor: styles.colors.cardinalRed}}position="static">
+                <Toolbar>
+                <IconButton edge="start" className={styles.menuButton} color="inherit" aria-label="menu">
+                    <MenuIcon/>
+                </IconButton>
+                <Typography variant="h6" className={styles.title}>
+                    Eta-lytics
+                </Typography>
+                </Toolbar>
+            </AppBar>
+            </div>
       );
     }
 }
