@@ -20,6 +20,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import Amplify, { API } from 'aws-amplify';
 
 
 const styles = {
@@ -46,6 +47,17 @@ const styles = {
   }
 }
 
+const config = Amplify.configure({
+  API: {
+      endpoints: [
+          {
+              name: "test123",
+              endpoint: "https://om7reelck3.execute-api.us-east-1.amazonaws.com/live/eta-lyticsGetDBLambda/"
+          },
+      ]
+  }
+});
+
 /**
  * Class that renders the TableComponent of eta-lytics. On componentDidMount,
  * it calls the API to fill the rows of the table with data about the GroupMe.
@@ -64,9 +76,19 @@ export default class TableComponent extends React.Component {
                 { id: 'likesGiven', numeric: true, disablePadding: false, label: 'likesGiven' }
             ]
         }
+
+        this.componentDidMount = this.componentDidMount.bind(this);
+        this.getData = this.getData.bind(this);
     }
 
- 
+    componentDidMount() {
+      // load data into entries here
+
+      this.state.entries = this.getData();
+      console.log("MOUNTED BBY");
+      console.log(this.state.entries);
+    }
+    
     /**
      *  Returns the data in row-ingestible format for the table 
      *  rendering.
@@ -76,9 +98,16 @@ export default class TableComponent extends React.Component {
      * @param {Float} likesPerMessage 
      * @param {Int} likesGiven 
      */
-    createData(name, messages, likesPerMessage, likesGiven) {
-        return { name, messages, likesPerMessage, likesGiven};
+    static createData(name, messages, likesPerMessage) {
+        var x= 0;
+        return { name, messages, likesPerMessage, x};
       }
+
+      getData() {
+        return API.get("test123", "entries").then(function(res) {
+        return res.body.entries;
+      });
+    }
 
     /**
      * Creates the TableHeader element. Will eventually support sort functionality for all
@@ -88,15 +117,17 @@ export default class TableComponent extends React.Component {
     EnhancedTableHead() {
       return (
         <TableHead>
-          {this.state.headCells.map(headCell => 
-            <TableCell>
-              key={headCell.id}
-              align={headCell.numeric ? 'right' : 'left'}
-              padding={headCell.disablePadding ? 'none' : 'default'}
-              {/* sortDirection={orderBy === headCell.id ? order : false} */}
-            </TableCell>)}
-          
-
+        <TableRow>
+        {this.state.headCells.map(headCell => 
+      <TableCell
+        key={headCell.id}
+        align={headCell.numeric ? 'right' : 'left'}
+        padding={headCell.disablePadding ? 'none' : 'default'}
+        sortDirection={false}
+        >
+          {headCell.label}
+      </TableCell>)}
+      </TableRow>
         </TableHead>
       )
      }
@@ -109,19 +140,7 @@ export default class TableComponent extends React.Component {
 
             <TableContainer>
             <Table>
-              <TableHead>
-              <TableRow>
-              {this.state.headCells.map(headCell => 
-            <TableCell
-              key={headCell.id}
-              align={headCell.numeric ? 'right' : 'left'}
-              padding={headCell.disablePadding ? 'none' : 'default'}
-              sortDirection={false}
-              >
-                {headCell.label}
-            </TableCell>)}
-            </TableRow>
-              </TableHead>
+              {this.EnhancedTableHead()}
             </Table>
 
             </TableContainer>         

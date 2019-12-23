@@ -27,28 +27,11 @@ function createData(name, messages, likesPerMessage, carbs, protein) {
 }
 
 console.log("SHIT");
-    Amplify.configure({
-        API: {
-            endpoints: [
-                {
-                    name: "test123",
-                    endpoint: "https://om7reelck3.execute-api.us-east-1.amazonaws.com/live/eta-lyticsGetDBLambda/"
-                },
-            ]
-        }
-    });
-
-    API.get("test123", "entries").then(response => {
-      return (response.body.entries);
-    }).catch(error => {
-      console.log("ERROR" + error.response)
-    });
 
 
 
-const rows =  API.get("test123", "entries").then(function(res) {
-    return res.body.entries.map(e => createData(e.name, e.Messages, e.LikesPerMessage))
-});
+
+const rows =  
 // result.then(function(response) {
 //     return response.json();
 //   }).then(function (data) {
