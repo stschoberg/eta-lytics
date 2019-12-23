@@ -3,13 +3,18 @@ import logo from './logo.svg';
 import Header from './components/Header';
 import Table from './components/Table';
 import './App.css';
+import TableComponent from './components/TableComponent';
+
+
 
 
 function App() {
+
+
   return (
     <div className="App">
       <Header></Header>
-      <Table></Table>
+      <TableComponent></TableComponent>
     </div>
   );
 }

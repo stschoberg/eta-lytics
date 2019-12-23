@@ -22,7 +22,7 @@ const styles = {
       flexGrow: 1,
     },
     menuButton: {
-     // marginRight: theme.spacing(2),
+      marginRight: 16,
     },
     title: {
       flexGrow: 1,
