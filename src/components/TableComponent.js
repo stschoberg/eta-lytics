@@ -68,12 +68,12 @@ export default class TableComponent extends React.Component {
 
         this.state = {
             size: 0,
-            entries: [],
+            entries: this.getData(),
             headCells: [
-                { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
-                { id: 'messages', numeric: true, disablePadding: false, label: 'messages' },
-                { id: 'likesPerMessage', numeric: true, disablePadding: false, label: 'likesPerMessage' },
-                { id: 'likesGiven', numeric: true, disablePadding: false, label: 'likesGiven' }
+                { id: 'name', numeric: false, disablePadding: false, label: 'Name' },
+                { id: 'messages', numeric: true, disablePadding: false, label: '# Messages' },
+                { id: 'likesPerMessage', numeric: true, disablePadding: false, label: 'Likes Recived Per Message' },
+                { id: 'likesGiven', numeric: true, disablePadding: false, label: 'Likes Given' }
             ]
         }
 
@@ -81,12 +81,12 @@ export default class TableComponent extends React.Component {
         this.getData = this.getData.bind(this);
     }
 
-    componentDidMount() {
+    async componentDidMount() {
       // load data into entries here
-
-      this.state.entries = this.getData();
-      console.log("MOUNTED BBY");
-      console.log(this.state.entries);
+      console.log("attempting mount")
+      await API.get("test123", "entries")
+          .then(res => res.body.entries)
+          .then(data => this.setState({entries : data}))
     }
     
     /**
@@ -103,10 +103,12 @@ export default class TableComponent extends React.Component {
         return { name, messages, likesPerMessage, x};
       }
 
-      getData() {
-        return API.get("test123", "entries").then(function(res) {
-        return res.body.entries;
-      });
+    getData() {
+        const res = API.get("test123", "entries")
+          .then(res => res.body.entries)
+          .then(data => this.setState({entries : data}))
+          .catch(err => console.log(err)); 
+        return res;
     }
 
     /**
@@ -125,11 +127,33 @@ export default class TableComponent extends React.Component {
         padding={headCell.disablePadding ? 'none' : 'default'}
         sortDirection={false}
         >
-          {headCell.label}
+          <TableSortLabel>
+          </TableSortLabel>
+          <b>{headCell.label}</b>
       </TableCell>)}
       </TableRow>
         </TableHead>
       )
+     }
+
+     TableBody() {
+       if (Array.isArray(this.state.entries) && this.state.entries.length){
+         return this.state.entries.map((row, index) => { return (
+          <TableRow>
+            <TableCell component="th" scope="row" padding="default">
+            {index + 1}.  {row.name}
+              </TableCell>
+              <TableCell align="right">{row.Messages}</TableCell>
+              <TableCell align="right">{row.LikesPerMessage}</TableCell>
+              <TableCell align="right">{row.likesGiven}</TableCell>
+
+          </TableRow>
+        )
+        })
+      }
+      else{
+        return (<TableRow><TableCell>Empty</TableCell></TableRow>)
+      }
      }
 
 
@@ -141,6 +165,9 @@ export default class TableComponent extends React.Component {
             <TableContainer>
             <Table>
               {this.EnhancedTableHead()}
+            <TableBody>
+              {this.TableBody()}
+            </TableBody>
             </Table>
 
             </TableContainer>         
