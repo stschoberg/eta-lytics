@@ -129,8 +129,9 @@ export default class TableComponent extends React.Component {
         sortDirection={false}
         >
           <TableSortLabel>
-          </TableSortLabel>
           <b>{headCell.label}</b>
+
+          </TableSortLabel>
       </TableCell>)}
       </TableRow>
         </TableHead>
