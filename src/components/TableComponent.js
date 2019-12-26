@@ -73,7 +73,8 @@ export default class TableComponent extends React.Component {
                 { id: 'name', numeric: false, disablePadding: false, label: 'Name' },
                 { id: 'messages', numeric: true, disablePadding: false, label: '# Messages' },
                 { id: 'likesPerMessage', numeric: true, disablePadding: false, label: 'Likes Recived Per Message' },
-                { id: 'likesGiven', numeric: true, disablePadding: false, label: 'Likes Given' }
+                { id: 'likesGiven', numeric: true, disablePadding: false, label: 'Likes Given' },
+                { id: 'percentageEta', numeric: true, disablePadding: false, label: 'Percentage of Eta Talk' }
             ]
         }
 
@@ -143,9 +144,11 @@ export default class TableComponent extends React.Component {
             <TableCell component="th" scope="row" padding="default">
             {index + 1}.  {row.name}
               </TableCell>
-              <TableCell align="right">{row.Messages}</TableCell>
-              <TableCell align="right">{row.LikesPerMessage}</TableCell>
-              <TableCell align="right">{row.likesGiven}</TableCell>
+              <TableCell align="right">{row.messages}</TableCell>
+              <TableCell align="right">{row.likes_per_message}</TableCell>
+              <TableCell align="right">{row.likes_given}</TableCell>
+              <TableCell align="right">{row.percentage_eta}</TableCell>
+
 
           </TableRow>
         )
