@@ -68,26 +68,58 @@ export default class TableComponent extends React.Component {
 
         this.state = {
             size: 0,
-            entries: this.getData(),
+            data: [],
             headCells: [
                 { id: 'name', numeric: false, disablePadding: false, label: 'Name' },
                 { id: 'messages', numeric: true, disablePadding: false, label: '# Messages' },
-                { id: 'likesPerMessage', numeric: true, disablePadding: false, label: 'Likes Recived Per Message' },
-                { id: 'likesGiven', numeric: true, disablePadding: false, label: 'Likes Given' },
-                { id: 'percentageEta', numeric: true, disablePadding: false, label: 'Percentage of Eta Talk' }
-            ]
+                { id: 'likes_per_message', numeric: true, disablePadding: false, label: 'Likes Recived Per Message' },
+                { id: 'likes_given', numeric: true, disablePadding: false, label: 'Likes Given' },
+                { id: 'percentage_eta', numeric: true, disablePadding: false, label: 'Percentage of Eta Talk' }
+            ],
+            sortDirection: 'desc',
+            sortBy: 'name'
+
         }
 
         this.componentDidMount = this.componentDidMount.bind(this);
-        this.getData = this.getData.bind(this);
+        this.sortBy = this.sortBy.bind(this);
+        this.compare = this.compare.bind(this);
     }
+
+    sortBy(key){
+      this.setState({
+        sortDirection: (this.state.sortDirection === 'asc') ? 'desc' : 'asc',
+
+        data: this.state.data.sort( (a, b) => (
+          console.log(a),
+          this.state.sortDirection != 'asc'
+          ? this.compare(a[key], b[key], key) // a[key].toString().localeCompare(b[key].toString())
+          : this.compare(b[key], a[key], key)//b[key].toString().localeCompare(a[key].toString())
+        )),
+        sortBy: key
+      })
+    }
+
+    compare(a , b, key) {
+      if(key === "name") {
+        return a.localeCompare(b);
+      }
+      else {
+        return (a - b);
+      }
+    }
+
 
     async componentDidMount() {
       // load data into entries here
       console.log("attempting mount")
       await API.get("test123", "entries")
           .then(res => res.body.entries)
-          .then(data => this.setState({entries : data}))
+          .then(data => this.setState({data : data}))
+
+      this.sortBy('name');
+
+      
     }
     
     /**
@@ -103,14 +135,6 @@ export default class TableComponent extends React.Component {
         var x= 0;
         return { name, messages, likesPerMessage, x};
       }
-
-    getData() {
-        const res = API.get("test123", "entries")
-          .then(res => res.body.entries)
-          .then(data => this.setState({entries : data}))
-          .catch(err => console.log(err)); 
-        return res;
-    }
 
     /**
      * Creates the TableHeader element. Will eventually support sort functionality for all
@@ -128,7 +152,11 @@ export default class TableComponent extends React.Component {
         padding={headCell.disablePadding ? 'none' : 'default'}
         sortDirection={false}
         >
-          <TableSortLabel>
+        <TableSortLabel
+          active={this.state.sortBy === headCell.id}
+          direction={this.state.sortDirection}
+          onClick={() => this.sortBy(headCell.id)}
+        >
           <b>{headCell.label}</b>
 
           </TableSortLabel>
@@ -139,8 +167,8 @@ export default class TableComponent extends React.Component {
      }
 
      TableBody() {
-       if (Array.isArray(this.state.entries) && this.state.entries.length){
-         return this.state.entries.map((row, index) => { return (
+       if (Array.isArray(this.state.data) && this.state.data.length){
+         return this.state.data.map((row, index) => { return (
           <TableRow>
             <TableCell component="th" scope="row" padding="default">
             {index + 1}.  {row.name}
