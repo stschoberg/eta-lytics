@@ -161,7 +161,7 @@ export default class TableComponent extends React.Component {
             {index + 1}.  {row.name}
               </TableCell>
               <TableCell align="right">{row.messages}</TableCell>
-              <TableCell align="right">{row.likes_per_message}</TableCell>
+              <TableCell align="right">{parseInt(row.likes_per_message) === -1 ? "No messages": row.likes_per_message}</TableCell>
               <TableCell align="right">{row.likes_given}</TableCell>
               <TableCell align="right">{row.percentage_eta}</TableCell>
 
