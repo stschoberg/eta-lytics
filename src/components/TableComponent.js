@@ -34,17 +34,6 @@ const styles = {
   }
 }
 
-const config = Amplify.configure({
-  API: {
-      endpoints: [
-          {
-              name: "test123",
-              endpoint: "https://dhdv449b05.execute-api.us-east-1.amazonaws.com/default/eta-lyticsGetDBLambda/"
-          },
-      ]
-  }
-});
-
 /**
  * Class that renders the TableComponent of eta-lytics. On componentDidMount,
  * it calls the API to fill the rows of the table with data about the GroupMe.
@@ -52,6 +41,17 @@ const config = Amplify.configure({
 export default class TableComponent extends React.Component {
     constructor() {
         super();
+
+        Amplify.configure({
+          API: {
+              endpoints: [
+                  {
+                      name: "test123",
+                      endpoint: "https://dhdv449b05.execute-api.us-east-1.amazonaws.com/default/eta-lyticsGetDBLambda/"
+                  },
+              ]
+          }
+        });
 
         this.state = {
             size: 0,
@@ -78,8 +78,7 @@ export default class TableComponent extends React.Component {
         sortDirection: (this.state.sortDirection === 'asc') ? 'desc' : 'asc',
 
         data: this.state.data.sort( (a, b) => (
-          console.log(a),
-          this.state.sortDirection != 'asc'
+          this.state.sortDirection !== 'asc'
           ? this.compare(a[key], b[key], key) // a[key].toString().localeCompare(b[key].toString())
           : this.compare(b[key], a[key], key)//b[key].toString().localeCompare(a[key].toString())
         )),
@@ -99,7 +98,6 @@ export default class TableComponent extends React.Component {
 
     async componentDidMount() {
       // load data into entries here
-      console.log("attempting mount")
       await API.get("test123", "entries")
           .then(res => res.body.entries)
           .then(data => this.setState({data : data}))
@@ -156,7 +154,7 @@ export default class TableComponent extends React.Component {
      TableBody() {
        if (Array.isArray(this.state.data) && this.state.data.length){
          return this.state.data.map((row, index) => { return (
-          <TableRow>
+          <TableRow key={index}>
             <TableCell component="th" scope="row" padding="default">
             {index + 1}.  {row.name}
               </TableCell>
@@ -181,8 +179,8 @@ export default class TableComponent extends React.Component {
           <div className={styles.root}>
           <Paper>
 
-            <TableContainer>
-            <Table>
+            <TableContainer style={{maxHeight: 700}}>
+            <Table stickyHeader>
               {this.EnhancedTableHead()}
             <TableBody>
               {this.TableBody()}
